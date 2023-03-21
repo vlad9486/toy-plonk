@@ -1,5 +1,7 @@
 use std::fmt;
 
+use crate::field::ExtendedField101;
+
 use super::{field::Field, curve::Point, poly::Poly, matrix};
 
 pub struct Assignment<const N: usize> {
@@ -344,8 +346,39 @@ impl Circuit<4> {
             + f + e.scalar_mul(Field::new(16));
         println!("rhs = {rhs}");
 
-        // TODO: pairing equation: e(lhs, 2 * G_2) = e(rhs, G_2) where G_2 = { 36, 31u }
-        true
+        // pairing equation: e(lhs, 2 * G_2) = e(rhs, G_2) where G_2 = { 36, 31u }, 2 * G_2 = { 90, 82u }
+        // cheating, use curve logarithm table
+
+        let it = || Point::CHEAT_TABLE.iter().enumerate();
+        let lhs_scalar = it().find(|(_, &x)| x.eq(&lhs)).unwrap().0;
+        let rhs_scalar = it().find(|(_, &x)| x.eq(&rhs)).unwrap().0;
+        // need to verify e(G, 2 * G_2) ^ lhs_scalar = e(G, G_2) ^ rhs_scalar
+        // e({ 1, 2 }, { 90, 82u }) ^ lhs_scalar = e({ 1, 2 }, { 36, 31u }) ^ rhs_scalar
+
+        // TODO: perform this computation by hands
+        // precomputed f_17(90, 82u)
+        let f_17_90_82u = ExtendedField101(68.into(), 47.into());
+        // precomputed f_17(36, 31u)
+        let f_17_36_31u = ExtendedField101(8.into(), 61.into());
+
+        // 101 is order of prime field, 17 is order of elliptic curve subgroup
+        // 101 ^ 2 - 1 / 17 = 600
+        // need to check (f_17_90_82u ^ 600) ^ lhs_scalar == (f_17_36_31u ^ 600) ^ rhs_scalar
+        // u ^ 2 = -2 (mod 101)
+
+        // naive exponent, not optimal
+        let mut l = ExtendedField101::E;
+        for _ in 0..(lhs_scalar * 600) {
+            l = l * f_17_90_82u;
+        }
+        let mut r = ExtendedField101::E;
+        for _ in 0..(rhs_scalar * 600) {
+            r = r * f_17_36_31u;
+        }
+
+        println!("l = {l}, r = {r}");
+
+        l == r
     }
 }
 

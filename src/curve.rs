@@ -63,6 +63,74 @@ impl Point {
         }
         r
     }
+
+    pub const CHEAT_TABLE: [Self; 17] = [
+        Self::Inf,
+        Self::Reg {
+            x: Field::new(1),
+            y: Field::new(2),
+        },
+        Self::Reg {
+            x: Field::new(68),
+            y: Field::new(74),
+        },
+        Self::Reg {
+            x: Field::new(26),
+            y: Field::new(45),
+        },
+        Self::Reg {
+            x: Field::new(65),
+            y: Field::new(98),
+        },
+        Self::Reg {
+            x: Field::new(12),
+            y: Field::new(32),
+        },
+        Self::Reg {
+            x: Field::new(32),
+            y: Field::new(42),
+        },
+        Self::Reg {
+            x: Field::new(91),
+            y: Field::new(35),
+        },
+        Self::Reg {
+            x: Field::new(18),
+            y: Field::new(49),
+        },
+        Self::Reg {
+            x: Field::new(18),
+            y: Field::new(52),
+        },
+        Self::Reg {
+            x: Field::new(91),
+            y: Field::new(66),
+        },
+        Self::Reg {
+            x: Field::new(32),
+            y: Field::new(59),
+        },
+        Self::Reg {
+            x: Field::new(12),
+            y: Field::new(69),
+        },
+        Self::Reg {
+            x: Field::new(65),
+            y: Field::new(3),
+        },
+        Self::Reg {
+            x: Field::new(26),
+            y: Field::new(56),
+        },
+        Self::Reg {
+            x: Field::new(68),
+            y: Field::new(27),
+        },
+        Self::Reg {
+            x: Field::new(1),
+            y: Field::new(99),
+        },
+    ];
 }
 
 impl Add<Point> for Point {

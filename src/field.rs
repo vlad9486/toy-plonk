@@ -134,3 +134,27 @@ impl<const M: u8> Div for Field<M> {
         unreachable!()
     }
 }
+
+#[derive(Clone, Copy, PartialEq, Eq)]
+pub struct ExtendedField101(pub Field<101>, pub Field<101>);
+
+impl ExtendedField101 {
+    pub const E: Self = ExtendedField101(Field(1), Field(0));
+}
+
+impl Mul for ExtendedField101 {
+    type Output = Self;
+
+    fn mul(self, rhs: Self) -> Self::Output {
+        Self(
+            self.0 * rhs.0 - Field(2) * self.1 * rhs.1,
+            self.1 * rhs.0 + self.0 * rhs.1,
+        )
+    }
+}
+
+impl fmt::Display for ExtendedField101 {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(f, "{{ {}, {}u }}", self.0, self.1)
+    }
+}
